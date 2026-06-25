@@ -197,7 +197,7 @@ exception/
 * [x] Restaurant Entity
 * [x] Restaurant APIs
 * [x] Global Exception Handling
-* [ ] Food Item Entity
+* [x] Food Item Entity
 * [ ] Food Item APIs
 
 ### Phase 3 - Order Module
@@ -231,6 +231,10 @@ exception/
 * Request Validation using Bean Validation
 * Global Exception Handling
 * REST API Error Handling
+* JPA Entity Relationships
+* One-To-Many Mapping
+* Many-To-One Mapping
+* Foreign Keys
 * Event-Driven Systems
 * Kafka Messaging
 * Containerization using Docker
