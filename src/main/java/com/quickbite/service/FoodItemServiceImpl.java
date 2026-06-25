@@ -35,4 +35,43 @@ public class FoodItemServiceImpl implements FoodItemService{
                 .price(saved.getPrice())
                 .name(saved.getName()).build();
     }
+
+    @Override
+    public List<FoodItemResponse> getAllFoodItems() {
+        return foodItemRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+    @Override
+    public FoodItemResponse getFoodItemById(Long id) {
+        FoodItem foodItem=foodItemRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Food Item not found"));
+        return mapToResponse(foodItem);
+    }
+
+    @Override
+    public FoodItemResponse updateFoodItem(Long id, FoodItemRequest request) {
+        Restaurant restaurant=restaurantRepository.findById(request.getRestaurantId()).orElseThrow(()->new ResourceNotFoundException("Restaurant not found"));
+        FoodItem foodItem=foodItemRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Food Item not found"));
+        foodItem.setName(request.getName());
+        foodItem.setDescription(request.getDescription());
+        foodItem.setPrice(request.getPrice());
+        foodItem.setRestaurant(restaurant);
+        FoodItem updated=foodItemRepository.save(foodItem);
+        return mapToResponse(updated);
+    }
+
+    @Override
+    public void deleteFoodItem(Long id) {
+        foodItemRepository.deleteById(id);
+    }
+    private FoodItemResponse mapToResponse(FoodItem foodItem){
+        return FoodItemResponse.builder()
+                .id(foodItem.getId())
+                .description(foodItem.getDescription())
+                .restaurantName(foodItem.getRestaurant().getName())
+                .price(foodItem.getPrice())
+                .name(foodItem.getName()).build();
+    }
 }

@@ -198,7 +198,7 @@ exception/
 * [x] Restaurant APIs
 * [x] Global Exception Handling
 * [x] Food Item Entity
-* [ ] Food Item APIs
+* [x] Food Item APIs
 
 ### Phase 3 - Order Module
 
