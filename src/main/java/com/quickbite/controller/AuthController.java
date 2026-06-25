@@ -1,5 +1,7 @@
 package com.quickbite.controller;
 
+import com.quickbite.dto.LoginRequest;
+import com.quickbite.dto.LoginResponse;
 import com.quickbite.dto.RegisterRequest;
 import com.quickbite.dto.RegisterResponse;
 import com.quickbite.service.AuthService;
@@ -18,5 +20,9 @@ public class AuthController {
     @PostMapping("/register")
     public RegisterResponse register(@RequestBody RegisterRequest registerRequest){
         return authService.register(registerRequest);
+    }
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest request){
+        return authService.login(request);
     }
 }

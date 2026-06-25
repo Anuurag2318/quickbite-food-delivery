@@ -29,6 +29,8 @@ The project is being developed incrementally, starting with a monolithic archite
 ### User Management
 
 * User Registration
+* User Login
+* JWT Token Generation
 * Password Encryption using BCrypt
 * Role-Based User Model
 
@@ -71,6 +73,21 @@ Response:
 "role": "CUSTOMER"
 }
 
+### Login User
+POST /auth/login
+
+Request:
+
+{
+"email": "Raj@gmail.com",
+"password": "password123"
+}
+
+Response:
+
+{
+"token": "eyJhbGciOiJIUzI1NiJ9..."
+}
 ---
 
 ## Architecture Implemented
@@ -91,6 +108,8 @@ Current Status:
 
 * BCrypt Password Encryption Implemented
 * JWT Authentication Pending
+* Spring Security Configured
+* JWT Validation Pending
 
 ---
 
@@ -119,8 +138,10 @@ exception/
 * [x] User Repository
 * [x] Registration API
 * [x] BCrypt Password Encryption
-* [ ] Login API
-* [ ] JWT Authentication
+* [x] Login API
+* [x] JWT Token Generation
+* [ ] JWT Request Validation
+* [ ] Protected APIs
 
 ### Phase 2 - Restaurant Module
 
