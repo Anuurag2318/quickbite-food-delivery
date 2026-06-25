@@ -109,7 +109,54 @@ Current Status:
 * BCrypt Password Encryption Implemented
 * JWT Token Generation Implemented
 * Spring Security Configured
-* JWT Validation Pending
+* JWT Token Validation Implemented
+* Protected APIs Implemented
+* Stateless Authentication
+
+---
+## Authentication Flow
+
+```text
+User Login
+    │
+    ▼
+JWT Token Generated
+    │
+    ▼
+Client Stores Token
+    │
+    ▼
+Client Sends Token in Authorization Header
+    │
+    ▼
+JwtAuthenticationFilter Intercepts Request
+    │
+    ▼
+JWT Token Validation
+    │
+    ▼
+Extract User Email
+    │
+    ▼
+Load User Details From Database
+    │
+    ▼
+Store Authentication In SecurityContextHolder
+    │
+    ▼
+Access Protected API
+```
+
+### Authentication Process
+
+1. User logs in using email and password.
+2. Password is verified using BCrypt.
+3. A JWT token is generated and returned to the client.
+4. The client sends the token in the Authorization header for protected APIs.
+5. JwtAuthenticationFilter validates the token.
+6. User details are loaded from the database.
+7. Spring Security stores the authenticated user in SecurityContextHolder.
+8. Protected APIs become accessible.
 
 ---
 
@@ -124,6 +171,8 @@ entity/
 dto/
 config/
 security/
+filter/
+util/
 exception/
 
 ---
@@ -140,8 +189,8 @@ exception/
 * [x] BCrypt Password Encryption
 * [x] Login API
 * [x] JWT Token Generation
-* [ ] JWT Request Validation
-* [ ] Protected APIs
+* [x] JWT Request Validation
+* [x] Protected APIs
 
 ### Phase 2 - Restaurant Module
 
