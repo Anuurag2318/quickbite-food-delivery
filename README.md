@@ -57,8 +57,8 @@ POST /auth/register
 Request:
 
 {
-"name": "Anurag",
-"email": "[anurag@gmail.com](mailto:anurag@gmail.com)",
+"name": "Raj",
+"email": "[Raj@gmail.com](mailto:Raj@gmail.com)",
 "password": "password123"
 }
 
@@ -66,8 +66,8 @@ Response:
 
 {
 "id": 1,
-"name": "Anurag",
-"email": "[anurag@gmail.com](mailto:anurag@gmail.com)",
+"name": "Raj",
+"email": "[Raj@gmail.com](mailto:Raj@gmail.com)",
 "role": "CUSTOMER"
 }
 
@@ -75,13 +75,13 @@ Response:
 
 ## Architecture Implemented
 
-Controller Layer
-↓
-Service Layer
-↓
-Repository Layer
-↓
-PostgreSQL Database
+**Controller Layer**
+        ↓
+**Service Layer**
+        ↓
+**Repository Layer**
+        ↓
+**PostgreSQL Database**
 
 ---
 
