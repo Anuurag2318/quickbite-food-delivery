@@ -75,13 +75,13 @@ Response:
 
 ## Architecture Implemented
 
-**Controller Layer**
+**Controller Layer** <br>
         ↓
-**Service Layer**
+**Service Layer** <br>
         ↓
-**Repository Layer**
+**Repository Layer** <br>
         ↓
-**PostgreSQL Database**
+**PostgreSQL Database** <br>
 
 ---
 
