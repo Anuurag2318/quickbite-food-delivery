@@ -107,7 +107,7 @@ Response:
 Current Status:
 
 * BCrypt Password Encryption Implemented
-* JWT Authentication Pending
+* JWT Token Generation Implemented
 * Spring Security Configured
 * JWT Validation Pending
 
