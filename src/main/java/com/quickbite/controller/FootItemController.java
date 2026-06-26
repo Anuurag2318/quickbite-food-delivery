@@ -3,7 +3,6 @@ package com.quickbite.controller;
 import com.quickbite.dto.FoodItemRequest;
 import com.quickbite.dto.FoodItemResponse;
 import com.quickbite.service.FoodItemService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

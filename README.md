@@ -16,8 +16,8 @@ The project is being developed incrementally, starting with a monolithic archite
 * PostgreSQL
 * Maven
 * Lombok
+* Redis
 * Kafka (Upcoming)
-* Redis (Upcoming)
 * Docker (Upcoming)
 
 ---
@@ -62,6 +62,14 @@ The project is being developed incrementally, starting with a monolithic archite
 * Cancel Order 
 * Order Tracking 
 * Transaction Management
+
+### Redis Caching
+
+* Redis Integration
+* Restaurant API Caching
+* Automatic Cache Eviction on Create, Update & Delete
+* Cache Expiration (TTL)
+* Cache Hit & Cache Miss Optimization
 ---
 
 ## Database Schema
@@ -247,6 +255,21 @@ Repository Layer
         ▼
 PostgreSQL Database
 ```
+### After Redis
+```text
+                 Client
+                    │
+                    ▼
+             Spring Boot APIs
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+      Redis Cache       PostgreSQL
+          │                   │
+          └─────────┬─────────┘
+                    ▼
+               Response
+```
 ---
 
 ## Authentication Flow
@@ -307,7 +330,28 @@ Save Order
         ▼
 Return Order Response
 ```
+## Redis Caching Flow
 
+```text
+Client Request
+      │
+      ▼
+Check Redis Cache
+      │
+ ┌────┴────┐
+ │         │
+ ▼         ▼
+Cache Hit  Cache Miss
+ │         │
+ ▼         ▼
+Return    Fetch From Database
+Cached          │
+Data            ▼
+           Store in Redis
+                │
+                ▼
+         Return Response
+```
 ### Authentication Process
 
 1. User logs in using email and password.
@@ -381,11 +425,13 @@ exception/
 * [x] Order Tracking
 
 ### Phase 4 - Redis Caching
-* [ ] Redis Setup
-* [ ] Cache Restaurants
-* [ ] Cache Food Items
-* [ ] Cache Eviction
-* [ ] Cache Update
+* [x] Redis Setup
+* [x] Restaurant API Caching
+* [x] FoodItem API Caching
+* [x] Cache Eviction
+* [x] Cache Expiration (TTL)
+* [x] Cache Hit & Cache Miss Verification
+* [x] Redis CLI Verification
 
 ### Phase 5 - Event Driven Architecture
 
@@ -432,8 +478,8 @@ exception/
 * Event-Driven Systems
 * Kafka Messaging
 * Order Lifecycle Management
+* Redis Caching
 * Event-Driven Systems *(Upcoming)*
-* Redis Caching *(Upcoming)*
 * Kafka Messaging *(Upcoming)*
 * Containerization using Docker *(Upcoming)*
 * Microservices Architecture *(Upcoming)*

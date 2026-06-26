@@ -2,7 +2,6 @@ package com.quickbite.service;
 
 import com.quickbite.dto.RestaurantRequest;
 import com.quickbite.dto.RestaurantResponse;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 

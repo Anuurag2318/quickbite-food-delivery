@@ -3,9 +3,7 @@ package com.quickbite.controller;
 import com.quickbite.dto.RestaurantRequest;
 import com.quickbite.dto.RestaurantResponse;
 import com.quickbite.service.RestaurantService;
-import com.quickbite.service.RestaurantServiceImpl;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

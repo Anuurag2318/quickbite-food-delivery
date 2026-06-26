@@ -8,9 +8,10 @@ import com.quickbite.exception.ResourceNotFoundException;
 import com.quickbite.repository.FoodItemRepository;
 import com.quickbite.repository.RestaurantRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import java.lang.module.ResolutionException;
 import java.util.List;
 
 @Service
@@ -19,6 +20,7 @@ public class FoodItemServiceImpl implements FoodItemService{
     private final FoodItemRepository foodItemRepository;
     private final RestaurantRepository restaurantRepository;
     @Override
+    @CacheEvict(value="foodItems",allEntries = true)
     public FoodItemResponse createFoodItem(FoodItemRequest request) {
         Restaurant restaurant=restaurantRepository.findById(request.getRestaurantId()).orElseThrow(()->new ResourceNotFoundException("Restaurant not found"));
         FoodItem foodItem=FoodItem.
@@ -37,6 +39,7 @@ public class FoodItemServiceImpl implements FoodItemService{
     }
 
     @Override
+    @Cacheable(value="foodItems")
     public List<FoodItemResponse> getAllFoodItems() {
         return foodItemRepository.findAll()
                 .stream()
@@ -45,12 +48,14 @@ public class FoodItemServiceImpl implements FoodItemService{
     }
 
     @Override
+    @Cacheable(value="foodItems",key="#id")
     public FoodItemResponse getFoodItemById(Long id) {
         FoodItem foodItem=foodItemRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Food Item not found"));
         return mapToResponse(foodItem);
     }
 
     @Override
+    @CacheEvict(value="foodItems",allEntries = true)
     public FoodItemResponse updateFoodItem(Long id, FoodItemRequest request) {
         Restaurant restaurant=restaurantRepository.findById(request.getRestaurantId()).orElseThrow(()->new ResourceNotFoundException("Restaurant not found"));
         FoodItem foodItem=foodItemRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Food Item not found"));
@@ -63,6 +68,7 @@ public class FoodItemServiceImpl implements FoodItemService{
     }
 
     @Override
+    @CacheEvict(value="foodItems",allEntries = true)
     public void deleteFoodItem(Long id) {
         foodItemRepository.deleteById(id);
     }

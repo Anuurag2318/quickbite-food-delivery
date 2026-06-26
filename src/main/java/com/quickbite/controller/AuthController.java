@@ -6,7 +6,6 @@ import com.quickbite.dto.RegisterRequest;
 import com.quickbite.dto.RegisterResponse;
 import com.quickbite.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
