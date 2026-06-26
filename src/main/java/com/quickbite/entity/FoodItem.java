@@ -3,6 +3,8 @@ package com.quickbite.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="food_items")
 @Getter @Setter
@@ -21,4 +23,6 @@ public class FoodItem {
     @JoinColumn(name="restaurant_id")
     private Restaurant restaurant;
 
+    @OneToMany(mappedBy = "foodItem")
+    private List<OrderItem> orderItems;
 }

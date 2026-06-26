@@ -1,11 +1,8 @@
 # QuickBite - Event-Driven Food Delivery Backend
 
 ## Overview
-
-QuickBite is a backend food delivery application built using Spring Boot and PostgreSQL.
-
-The project is being developed incrementally, starting with a monolithic architecture and later evolving into a microservices-based, event-driven system using Kafka and Docker.
-
+QuickBite is a backend food delivery application built using Spring Boot and PostgreSQL. 
+The project is being developed incrementally, starting with a monolithic architecture and later evolving into a microservices-based, event-driven system using Kafka, Redis, and Docker.
 ---
 
 ## Tech Stack
@@ -19,8 +16,9 @@ The project is being developed incrementally, starting with a monolithic archite
 * PostgreSQL
 * Maven
 * Lombok
-* Kafka
-* Docker
+* Kafka (Upcoming)
+* Redis (Upcoming)
+* Docker (Upcoming)
 
 ---
 
@@ -30,10 +28,36 @@ The project is being developed incrementally, starting with a monolithic archite
 
 * User Registration
 * User Login
+* BCrypt Password Encryption
 * JWT Token Generation
-* Password Encryption using BCrypt
+* JWT Authentication & Authorization 
+* Protected APIs 
 * Role-Based User Model
 
+### Restaurant Management
+*  Add Restaurant 
+* Get Restaurant by ID 
+* Get All Restaurants 
+* Update Restaurant 
+* Delete Restaurant 
+* Global Exception Handling
+
+### Food Item Management
+* Add Food Item 
+* Get Food Item by ID 
+* Get All Food Items 
+* Update Food Item 
+* Delete Food Item 
+* Restaurant ↔ FoodItem Relationship (One-To-Many)
+
+### Order Management
+* Place Order 
+* OrderItem Entity 
+* Order ↔ OrderItem Relationship 
+* FoodItem ↔ OrderItem Relationship 
+* Automatic Total Amount Calculation 
+* Historical Price Storage 
+* Order Status Management (PLACED)
 ---
 
 ## Database Schema
@@ -47,6 +71,50 @@ The project is being developed incrementally, starting with a monolithic archite
 | email    | String (Unique)    |
 | password | String (Encrypted) |
 | role     | Enum               |
+
+### Restaurants
+
+| Column  | Type   |
+| ------- | ------ |
+| id      | Long   |
+| name    | String |
+| address | String |
+
+---
+
+### Food Items
+
+| Column        | Type      |
+| ------------- | --------- |
+| id            | Long      |
+| name          | String    |
+| description   | String    |
+| price         | Double    |
+| restaurant_id | Long (FK) |
+
+---
+
+### Orders
+
+| Column       | Type          |
+| ------------ | ------------- |
+| id           | Long          |
+| order_date   | LocalDateTime |
+| total_amount | Double        |
+| status       | Enum          |
+| user_id      | Long (FK)     |
+
+---
+
+### Order Items
+
+| Column       | Type      |
+| ------------ | --------- |
+| id           | Long      |
+| quantity     | Integer   |
+| price        | Double    |
+| food_item_id | Long (FK) |
+| order_id     | Long (FK) |
 
 ---
 
@@ -90,30 +158,78 @@ Response:
 }
 ---
 
+### Restaurant APIs
+
+* **POST** `/restaurants`
+* **GET** `/restaurants`
+* **GET** `/restaurants/{id}`
+* **PUT** `/restaurants/{id}`
+* **DELETE** `/restaurants/{id}`
+
+---
+
+### Food Item APIs
+
+* **POST** `/food-items`
+* **GET** `/food-items`
+* **GET** `/food-items/{id}`
+* **PUT** `/food-items/{id}`
+* **DELETE** `/food-items/{id}`
+
+---
+
+### Order APIs
+
+#### Place Order
+
+**POST** `/orders`
+
+Sample Request
+
+```json
+{
+  "userId": 1,
+  "items": [
+    {
+      "foodItemId": 1,
+      "quantity": 2
+    },
+    {
+      "foodItemId": 2,
+      "quantity": 1
+    }
+  ]
+}
+```
+
+Sample Response
+
+```json
+{
+  "id": 1,
+  "totalAmount": 837.0,
+  "status": "PLACED"
+}
+```
+
+---
+
 ## Architecture Implemented
 
-**Controller Layer** <br>
-        ↓ <br>
-**Service Layer** <br>
-        ↓ <br>
-**Repository Layer** <br>
-        ↓ <br>
-**PostgreSQL Database** <br>
-
+```text
+Controller Layer
+        │
+        ▼
+Service Layer
+        │
+        ▼
+Repository Layer
+        │
+        ▼
+PostgreSQL Database
+```
 ---
 
-## Security
-
-Current Status:
-
-* BCrypt Password Encryption Implemented
-* JWT Token Generation Implemented
-* Spring Security Configured
-* JWT Token Validation Implemented
-* Protected APIs Implemented
-* Stateless Authentication
-
----
 ## Authentication Flow
 
 ```text
@@ -146,6 +262,32 @@ Store Authentication In SecurityContextHolder
     ▼
 Access Protected API
 ```
+## Order Processing Flow
+
+```text
+Client Places Order
+        │
+        ▼
+Validate User
+        │
+        ▼
+Validate Food Items
+        │
+        ▼
+Create Order
+        │
+        ▼
+Calculate Total Amount
+        │
+        ▼
+Create Order Items
+        │
+        ▼
+Save Order
+        │
+        ▼
+Return Order Response
+```
 
 ### Authentication Process
 
@@ -157,6 +299,20 @@ Access Protected API
 6. User details are loaded from the database.
 7. Spring Security stores the authenticated user in SecurityContextHolder.
 8. Protected APIs become accessible.
+
+---
+
+## Security
+
+Current Status:
+
+* BCrypt Password Encryption Implemented
+* JWT Token Generation Implemented
+* Spring Security Configured
+* JWT Token Validation Implemented
+* Protected APIs Implemented
+* Stateless Authentication
+* Protected APIs using Spring Security
 
 ---
 
@@ -202,8 +358,8 @@ exception/
 
 ### Phase 3 - Order Module
 
-* [ ] Order Entity
-* [ ] Order APIs
+* [x] Order Entity
+* [x] Order APIs
 * [ ] Order Tracking
 
 ### Phase 4 - Event Driven Architecture
@@ -238,3 +394,7 @@ exception/
 * Event-Driven Systems
 * Kafka Messaging
 * Containerization using Docker
+* Event-Driven Architecture *(Upcoming)*
+* Redis Caching *(Upcoming)*
+* Kafka Messaging *(Upcoming)*
+* Docker Containerization *(Upcoming)*

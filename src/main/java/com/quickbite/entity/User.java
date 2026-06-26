@@ -3,6 +3,8 @@ package com.quickbite.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Table(name="users")
 @Getter
@@ -23,4 +25,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 }
