@@ -565,7 +565,9 @@ config/
 consumer/
 event/
 service/
+
 ---
+
 ## Microservices
 
 Currently the project consists of:
