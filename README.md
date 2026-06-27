@@ -17,8 +17,10 @@ The project is being developed incrementally, starting with a monolithic archite
 * Maven
 * Lombok
 * Redis
-* Kafka (Upcoming)
-* Docker (Upcoming)
+* Apache Kafka
+* Redis
+* Docker
+* Docker Compose
 
 ---
 
@@ -70,6 +72,18 @@ The project is being developed incrementally, starting with a monolithic archite
 * Automatic Cache Eviction on Create, Update & Delete
 * Cache Expiration (TTL)
 * Cache Hit & Cache Miss Optimization
+
+### Event-Driven Architecture
+
+* Apache Kafka Integration
+* Kafka Producer
+* Kafka Consumer
+* Order Created Event Publishing
+* Asynchronous Notification Processing
+* Transactional Event Publishing
+* Outbox Pattern
+* Scheduled Outbox Event Processing
+* Automatic Retry for Pending Events
 ---
 
 ## Database Schema
@@ -128,6 +142,16 @@ The project is being developed incrementally, starting with a monolithic archite
 | food_item_id | Long (FK) |
 | order_id     | Long (FK) |
 
+### Outbox Events
+
+| Column        | Type          |
+| ------------- | ------------- |
+| id            | Long          |
+| event_type    | String        |
+| payload       | String (JSON) |
+| status        | Enum          |
+| created_at    | LocalDateTime |
+| processed_at  | LocalDateTime |
 ---
 
 ## API Endpoints
@@ -270,6 +294,29 @@ PostgreSQL Database
                     ▼
                Response
 ```
+
+### After Kafka + Outbox Pattern
+```text
+                 Client
+                    │
+                    ▼
+             Spring Boot APIs
+                    │
+          Database Transaction
+                    │
+        ┌───────────┴───────────┐
+        ▼                       ▼
+    Orders Table         Outbox Table
+                                │
+                                ▼
+                      Scheduled Outbox Processor
+                                │
+                                ▼
+                         Apache Kafka Topic
+                                │
+                                ▼
+                     Kafka Consumer (Notification)
+```
 ---
 
 ## Authentication Flow
@@ -351,6 +398,32 @@ Data            ▼
                 │
                 ▼
          Return Response
+```
+
+## Outbox Pattern Flow
+```text
+Client Places Order
+│
+▼
+Save Order
+│
+▼
+Save Outbox Event (PENDING)
+│
+▼
+Database Commit
+│
+▼
+Scheduler Reads Pending Events
+│
+▼
+Publish Event To Kafka
+│
+▼
+Update Status → PROCESSED
+│
+▼
+Consumer Receives Event
 ```
 ### Authentication Process
 
@@ -435,15 +508,21 @@ exception/
 
 ### Phase 5 - Event Driven Architecture
 
-* [ ] Kafka Setup
-* [ ] Order Events
-* [ ] Notification Service
-* [ ] Inventory Events
+* [x] Kafka Setup
+* [x] Kafka Producer
+* [x] Kafka Consumer
+* [x] Order Created Events
+* [x] Transactional Event Publishing
+* [x] Outbox Pattern
+* [x] Scheduled Event Processing
+* [x] Event Retry Mechanism
+* [x] Notification Consumer (Monolith)
+* [ ] Inventory Consumer
 
 ### Phase 6 - Deployment
 
-* [ ] Docker
-* [ ] Docker Compose
+* [x] Docker
+* [x] Docker Compose
 * [ ] GitHub Documentation
 
 ### Phase 7 - Microservices
@@ -464,22 +543,19 @@ exception/
 * Spring Security
 * JWT Authentication
 * Database Design
-* Microservices
 * Request Validation using Bean Validation
 * Global Exception Handling
 * REST API Error Handling
 * JPA Entity Relationships
-* One-To-Many Mapping
-* Many-To-One Mapping
-* Foreign Keys
 * Pagination & Sorting
 * Transaction Management
-* Business Rule Validation
-* Event-Driven Systems
-* Kafka Messaging
-* Order Lifecycle Management
 * Redis Caching
-* Event-Driven Systems *(Upcoming)*
-* Kafka Messaging *(Upcoming)*
-* Containerization using Docker *(Upcoming)*
+* Docker & Docker Compose
+* Apache Kafka
+* Event-Driven Architecture
+* Event Publishing & Consumption
+* Outbox Pattern
+* Scheduled Jobs
+* Asynchronous Processing
+* Reliable Event Delivery
 * Microservices Architecture *(Upcoming)*

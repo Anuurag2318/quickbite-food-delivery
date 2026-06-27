@@ -1,15 +1,17 @@
 package com.quickbite.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.quickbite.dto.*;
 import com.quickbite.entity.*;
 import com.quickbite.exception.InvalidOrderStatusException;
 import com.quickbite.exception.ResourceNotFoundException;
-import com.quickbite.repository.FoodItemRepository;
-import com.quickbite.repository.OrderItemRepository;
-import com.quickbite.repository.OrderRepository;
-import com.quickbite.repository.UserRepository;
+import com.quickbite.kafka.event.OrderPlacedEvent;
+import com.quickbite.kafka.producer.KafkaProducerService;
+import com.quickbite.repository.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,8 +29,11 @@ public class OrderServiceImpl implements OrderService{
     private final FoodItemRepository foodItemRepository;
     private final OrderItemRepository orderItemRepository;
     private final UserRepository userRepository;
+    private final ApplicationEventPublisher applicationEventPublisher;
+    private final OutboxEventRepository outboxEventRepository;
+    private final ObjectMapper objectMapper;
     @Override
-    public OrderResponse placeOrder(OrderRequest request) {
+    public OrderResponse placeOrder(OrderRequest request) throws JsonProcessingException {
         User user=userRepository.findById(request.getUserId())
                 .orElseThrow(()->new ResourceNotFoundException("User not found"));
         if(request.getItems().isEmpty()){
@@ -58,6 +63,21 @@ public class OrderServiceImpl implements OrderService{
         }
         order.setTotalAmount(totalAmount);
         orderRepository.save(order);
+        OrderPlacedEvent event=OrderPlacedEvent.builder()
+                .orderId(order.getId())
+                .userId(user.getId())
+                .totalAmount(order.getTotalAmount())
+                .status(order.getStatus())
+                .build();
+        String payload=objectMapper.writeValueAsString(event);
+        OutboxEvent outbox=OutboxEvent.builder()
+                .eventType("ORDER_PLACED")
+                .payload(payload)
+                .status(OutboxStatus.PENDING)
+                .createdAt(LocalDateTime.now())
+                .build();
+        outboxEventRepository.save(outbox);
+//        applicationEventPublisher.publishEvent(new OrderCreatedSpringEvent(event));
         return OrderResponse.builder()
                 .id(order.getId())
                 .totalAmount(order.getTotalAmount())
@@ -116,7 +136,7 @@ public class OrderServiceImpl implements OrderService{
                 .status(order.getStatus())
                 .estimatedDeliveryTime(estimatedDeliveryTime).build();
     }
-        private boolean isValidStatusTransition(OrderStatus currentStatus,OrderStatus newStatus){
+    private boolean isValidStatusTransition(OrderStatus currentStatus,OrderStatus newStatus){
         switch(currentStatus){
             case PLACED:
                 return newStatus==OrderStatus.CONFIRMED ||

@@ -1,5 +1,6 @@
 package com.quickbite.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.quickbite.dto.OrderRequest;
 import com.quickbite.dto.OrderResponse;
 import com.quickbite.dto.OrderTrackingResponse;
@@ -17,7 +18,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping
-    public OrderResponse placeOrder(@RequestBody OrderRequest request){
+    public OrderResponse placeOrder(@RequestBody OrderRequest request) throws JsonProcessingException {
         return orderService.placeOrder(request);
     }
     @GetMapping("/users/{userId}")
